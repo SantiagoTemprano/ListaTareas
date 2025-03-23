@@ -10,7 +10,7 @@
 
            <x-alert-success>{{ session('success') }} </x-alert-success>
             
-            <span> {{ dd($tarea)}} </span>
+            <span class="text-white px-2 py-1 border border-gray-400 bg-gray-800 rounded"> {{ $tarea->lista_tareas->nombre}} </span>
 
             <div class="flex gap-6">
                 <p class="text-white">Creada: {{ $tarea->created_at->diffForHumans() }}</p>

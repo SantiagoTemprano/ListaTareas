@@ -13,8 +13,8 @@ class Tarea extends Model
         return 'uuid';
     }
 
-    public function listaTareas(){
-        return $this->belongsTo(ListaTareas::class);
+    public function lista_tareas(){
+        return $this->belongsTo(ListaTareas::class,'lista_tareas_id');
     }
 
     public function user(){

@@ -44,7 +44,7 @@ class TareaController extends Controller
             'uuid' => Str::uuid(),
             'titulo' => $request->titulo,
             'texto' => $request->texto,
-            'listaTareas_id' => $request->listaTareas_id
+            'lista_tareas_id' => $request->lista_tareas_id
         ]);
 
         return to_route('tareas.show', $tarea);
@@ -55,6 +55,9 @@ class TareaController extends Controller
      */
     public function show(Tarea $tarea)
     {
+
+        $tarea = Tarea::with(['user', 'lista_tareas'])->findOrFail($tarea->id);
+
         if(!$tarea->user->is(Auth::user())){
             abort(403);
         }
@@ -93,7 +96,7 @@ class TareaController extends Controller
         $tarea ->update([
             'titulo' => $request->titulo,
             'texto' => $request->texto,
-            'listaTareas_id' => $request->listaTareas_id
+            'lista_tareas_id' => $request->lista_tareas_id
         ]);
 
         return to_route('tareas.show', $tarea)->with('success', 'Cambios guardados con éxito');

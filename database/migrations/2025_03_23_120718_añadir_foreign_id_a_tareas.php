@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tareas', function (Blueprint $table) {
-            $table->foreignIdFor(ListaTareas::class,'listaTareas_id')->nullable();
+            $table->foreignIdFor(ListaTareas::class,'lista_tareas_id')->nullable();
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tareas', function (Blueprint $table) {
-            $table->dropColumn('listaTareas_id');
+            $table->dropColumn('lista_tareas_id');
         });
 
     }
