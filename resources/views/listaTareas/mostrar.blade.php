@@ -10,6 +10,8 @@
             <div class="flex gap-6">
                 <p class="text-white">Creada: {{ $listaTareas->created_at->diffForHumans() }}</p>
                 <p class="text-white">Actualizada por última vez: {{ $listaTareas->updated_at->diffForHumans() }}</p>
+
+                <x-link-button href="{{ route('listaTareas.edit') }}" class="ml-auto">Editar Lista de tareas</x-link-button>
             </div>    
 
             <div class="bg-white p-6 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">

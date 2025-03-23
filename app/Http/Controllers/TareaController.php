@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tarea;
+use App\Models\ListaTareas;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,8 +16,7 @@ class TareaController extends Controller
      */
     public function index()
     {
-        $user_id = Auth::id();
-        $tareas = Tarea::where('user_id',$user_id)->latest('updated_at')->paginate(5);
+        $tareas = Tarea::whereBelongsTo(Auth::user())->latest('updated_at')->paginate(5);
         return view('tareas.index')->with('tareas', $tareas);
     }
 
@@ -25,7 +25,9 @@ class TareaController extends Controller
      */
     public function create()
     {
-        return view('tareas.crear');
+        $user_id = Auth::id();
+        $listaTareas = ListaTareas::where('user_id',$user_id)->orderBy('nombre')->get();
+        return view('tareas.crear')->with('listaTareas',$listaTareas);
     }
 
     /**
@@ -37,15 +39,15 @@ class TareaController extends Controller
             'titulo' => 'required|max:120',
             'texto' => 'required|max:4000'
         ]);
-        $tarea = new Tarea([
-            'user_id' => Auth::id(),
+
+        $tarea = Auth::user()->tareas()->create([
             'uuid' => Str::uuid(),
             'titulo' => $request->titulo,
-            'texto' => $request->texto
+            'texto' => $request->texto,
+            'listaTareas_id' => $request->listaTareas_id
         ]);
-        $tarea->save();
 
-        return to_route('tareas.index');
+        return to_route('tareas.show', $tarea);
     }
 
     /**
@@ -53,7 +55,7 @@ class TareaController extends Controller
      */
     public function show(Tarea $tarea)
     {
-        if($tarea->user_id !== Auth::id()){
+        if(!$tarea->user->is(Auth::user())){
             abort(403);
         }
 
@@ -65,7 +67,12 @@ class TareaController extends Controller
      */
     public function edit(Tarea $tarea)
     {
-        //
+        $user_id = Auth::id();
+        if(!$tarea->user->is(Auth::user())){
+            abort(403);
+        }
+        $listaTareas = ListaTareas::where('user_id',$user_id)->orderBy('nombre')->get();
+        return view('tareas.editar',['tarea' => $tarea,'listaTareas' => $listaTareas]);
     }
 
     /**
@@ -73,7 +80,23 @@ class TareaController extends Controller
      */
     public function update(Request $request, Tarea $tarea)
     {
-        //
+        
+        if(!$tarea->user->is(Auth::user())){
+            abort(403);
+        }
+
+        $request->validate([
+            'titulo' => 'required|max:120',
+            'texto' => 'required|max:4000'
+        ]);
+        
+        $tarea ->update([
+            'titulo' => $request->titulo,
+            'texto' => $request->texto,
+            'listaTareas_id' => $request->listaTareas_id
+        ]);
+
+        return to_route('tareas.show', $tarea)->with('success', 'Cambios guardados con éxito');
     }
 
     /**
@@ -81,6 +104,11 @@ class TareaController extends Controller
      */
     public function destroy(Tarea $tarea)
     {
-        //
+        if(!$tarea->user->is(Auth::user())){
+            abort(403);
+        }
+
+        $tarea->delete();
+        return to_route('tareas.index')->with('success', 'Tarea borrada con éxito');
     }
 }

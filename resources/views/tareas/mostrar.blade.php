@@ -7,9 +7,23 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+
+           <x-alert-success>{{ session('success') }} </x-alert-success>
+            
+            <span> {{ dd($tarea)}} </span>
+
             <div class="flex gap-6">
                 <p class="text-white">Creada: {{ $tarea->created_at->diffForHumans() }}</p>
                 <p class="text-white">Actualizada por última vez: {{ $tarea->updated_at->diffForHumans() }}</p>
+
+                <x-link-button href="{{ route('tareas.edit',$tarea) }}" class="ml-auto">Editar Tarea</x-link-button>
+
+                <form action ="{{ route('tareas.destroy', $tarea) }}" method="post">
+                    @method('delete')
+                    @csrf
+                    <x-primary-button class="!bg-red-500 !hover-red-600" onclick="return confirm('¿Seguro que quieres borrar?')">Borrar Tarea
+                    </x-primary-button>
+                </form>
             </div>    
 
             <div class="bg-white p-6 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
