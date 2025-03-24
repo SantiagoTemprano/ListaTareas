@@ -20,7 +20,6 @@
             @empty
             <p class="mt-2 text-gray-500">No tienes listas de tareas.</p>
             @endforelse
-            {{ $listaTareas->links() }}
         </div>
     </div>
 </x-app-layout>

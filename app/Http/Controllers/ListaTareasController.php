@@ -15,7 +15,7 @@ class ListaTareasController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        $listaTareas = ListaTareas::where('user_id',$user_id)->orderBy('nombre')->paginate(10);
+        $listaTareas = ListaTareas::where('user_id',$user_id)->orderBy('nombre')->get();
         return view('listaTareas.index')->with('listaTareas', $listaTareas);
     }
 
@@ -47,29 +47,46 @@ class ListaTareasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ListaTareas $listaTareas)
+    public function show(ListaTareas $listaTarea)
     {
-        if($listaTareas->user_id !== Auth::id()){
+        if($listaTarea->user_id !== Auth::id()){
             abort(403);
         }
 
-        return view('listaTareas.mostrar',['listaTareas' => $listaTareas]);
+        return view('listaTareas.mostrar',['listaTareas' => $listaTarea]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ListaTareas $listaTareas)
+    public function edit(ListaTareas $listaTarea)
     {
-        //
+
+        if($listaTarea->user_id !== Auth::id()){
+            abort(403);
+        }
+
+        return view('listaTareas.editar',['listaTareas' => $listaTarea]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ListaTareas $listaTareas)
+    public function update(Request $request, ListaTareas $listaTarea)
     {
-        //
+        if($listaTarea->user_id !== Auth::id()){
+            abort(403);
+        }
+
+        $request->validate([
+            'nombre' => 'required|max:120'
+        ]);
+        
+        $listaTarea ->update([
+            'nombre' => $request->nombre
+        ]);
+
+        return to_route('listaTareas.show', $listaTarea)->with('success', 'Cambios guardados con éxito');
     }
 
     /**
