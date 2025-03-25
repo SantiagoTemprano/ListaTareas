@@ -11,7 +11,7 @@
                 Nueva lista de tareas
             </x-link-button>
             @forelse ($listaTareas as $listaTarea)
-            <div class="bg-white p-2 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white p-4 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <h2 class="font-bold text-2xl text-white"> 
                     <a href="{{ route('listaTareas.show', $listaTarea) }}" class="hover:underline"> {{ $listaTarea->nombre }} </a>
                 </h2>

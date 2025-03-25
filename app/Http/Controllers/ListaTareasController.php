@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tarea;
 use App\Models\ListaTareas;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class ListaTareasController extends Controller
@@ -53,7 +54,9 @@ class ListaTareasController extends Controller
             abort(403);
         }
 
-        return view('listaTareas.mostrar',['listaTareas' => $listaTarea]);
+        $tareas = Tarea::where('lista_tareas_id',$listaTarea->id)->latest('updated_at')->paginate(5);
+
+        return view('listaTareas.mostrar',['listaTareas' => $listaTarea,'tareas' => $tareas]);
     }
 
     /**
@@ -92,8 +95,19 @@ class ListaTareasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ListaTareas $listaTareas)
+    public function destroy(ListaTareas $listaTarea)
     {
-        //
+        if($listaTarea->user_id !== Auth::id()){
+            abort(403);
+        }
+
+        // dd(sizeof($listaTarea->tareas));
+
+        if(sizeof($listaTarea->tareas) !== 0){
+            return to_route('listaTareas.show',$listaTarea)->with('error', 'No se puede borrar una lista con tareas');
+        }
+
+        $listaTarea->delete();
+        return to_route('listaTareas.index')->with('success', 'Lista borrada con éxito');
     }
 }
