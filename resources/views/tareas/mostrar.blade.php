@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-
+            {{-- Al editar correctamente se muestra un mensaje --}}
            <x-alert-success>{{ session('success') }} </x-alert-success>
             
             <span class="text-white px-2 py-1 border border-gray-400 bg-gray-800 rounded"> {{ $tarea->lista_tareas->nombre}} </span>
@@ -21,8 +21,7 @@
                 <form action ="{{ route('tareas.destroy', $tarea) }}" method="post">
                     @method('delete')
                     @csrf
-                    <x-primary-button class="!bg-red-500 !hover-red-600" onclick="return confirm('¿Seguro que quieres borrar?')">Borrar Tarea
-                    </x-primary-button>
+                    <x-primary-button class="!bg-red-500 !hover-red-600" onclick="return confirm('¿Seguro que quieres borrar?')">Borrar Tarea</x-primary-button>
                 </form>
             </div>    
 

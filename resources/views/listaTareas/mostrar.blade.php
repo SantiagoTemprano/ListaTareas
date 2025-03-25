@@ -7,8 +7,9 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            
+            {{-- Al editar correctamente se muestra un mensaje --}}
             <x-alert-success>{{ session('success')  }} </x-alert-success>
+            {{-- Al intentar borrar una lista con tareas se muestra un mensaje --}}
             <x-alert-error>{{ session('error') }} </x-alert-error>
 
             <div class="flex gap-6">
@@ -20,8 +21,7 @@
                 <form action ="{{ route('listaTareas.destroy', $listaTareas) }}" method="post">
                     @method('delete')
                     @csrf
-                    <x-primary-button class="!bg-red-500 !hover-red-600" onclick="return confirm('¿Seguro que quieres borrar?')">Borrar Lista
-                    </x-primary-button>
+                    <x-primary-button class="!bg-red-500 !hover-red-600" onclick="return confirm('¿Seguro que quieres borrar?')">Borrar Lista</x-primary-button>
                 </form>
             </div>    
 
@@ -31,7 +31,7 @@
                 </h2>
                 <p class="mt-4 text-white whitespace-pre-wrap">  {{ $listaTareas->texto }} </p>
             </div>
-
+            {{-- Se muestran las tareas pertenecientes a esta lista --}}
             @forelse ($tareas as $tarea)
             <div class="bg-white p-6 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <h2 class="font-bold text-2xl text-white"> 
